@@ -1,3 +1,4 @@
+import brcypt from "bcryptjs";
 import User from "../models/user.models.js";
 export const signup = (req, res) => {
   const { email, fullName, password } = req.body;
@@ -9,6 +10,7 @@ export const signup = (req, res) => {
     if (user) {
       res.status(400).send("Email already exists");
     }
+    const salt = brcypt;
   } catch (error) {}
 };
 
