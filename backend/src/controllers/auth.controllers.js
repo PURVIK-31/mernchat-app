@@ -10,7 +10,18 @@ export const signup = (req, res) => {
     if (user) {
       res.status(400).send("Email already exists");
     }
-    const salt = brcypt;
+    const salt = brcypt.genSaltSync(10);
+    const hashedPassword = brcypt.hash(password, salt);
+    const newUser = new User({
+      fullName,
+      email,
+      password: hashedPassword,
+    });
+    if (newUser) {
+      //gen jwt token:
+    } else {
+      res.send("Error creating user, check credentials");
+    }
   } catch (error) {}
 };
 
