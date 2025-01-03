@@ -1,5 +1,10 @@
 export const signup = (req, res) => {
-  res.send("signup");
+  const { email, fullName, password } = req.body;
+  try {
+    if (password.length < 6) {
+      res.status(400).send("Password must be at least 6 characters long");
+    }
+  } catch (error) {}
 };
 
 export const login = (req, res) => {
