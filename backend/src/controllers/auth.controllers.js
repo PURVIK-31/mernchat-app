@@ -10,12 +10,12 @@ export const signup = async (req, res) => {
     if (password.length < 6) {
       res.status(400).send("Password must be at least 6 characters long");
     }
-    const user = new User.findOne({ email });
+    const user = await User.findOne({ email });
     if (user) {
       res.status(400).send("Email already exists");
     }
-    const salt = brcypt.genSaltSync(10);
-    const hashedPassword = brcypt.hash(password, salt);
+    const salt = await brcypt.genSaltSync(10);
+    const hashedPassword = await brcypt.hash(password, salt);
     const newUser = new User({
       fullName,
       email,
