@@ -1,8 +1,12 @@
 import brcypt from "bcryptjs";
 import User from "../models/user.models.js";
-export const signup = (req, res) => {
+import { generateToken } from "../lib/utils.js";
+export const signup = async (req, res) => {
   const { email, fullName, password } = req.body;
   try {
+    if (!email || !fullName || !password) {
+      res.status(400).send("Please provide all the required fields");
+    }
     if (password.length < 6) {
       res.status(400).send("Password must be at least 6 characters long");
     }
@@ -19,10 +23,21 @@ export const signup = (req, res) => {
     });
     if (newUser) {
       //gen jwt token:
+      generateToken(newUser._id, res);
+      await newUser.save();
+      res.status(201).json({
+        _id: newUser._id,
+        fullName: newUser.fullName,
+        email: newUser.email,
+        profilepic: newUser.profilepic,
+      });
     } else {
       res.send("Error creating user, check credentials");
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log("Error in the controller, error: ", error);
+    res.status(500).send("Error in the controller, error: " + error);
+  }
 };
 
 export const login = (req, res) => {
