@@ -43,13 +43,16 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
+    if (!email || !password) {
+      res.status(400).send("Please provide all the required fields");
+    }
     const user = await User.findOne({ email });
     if (!user) {
-      res.status(400).send("Invalid email or password");
+      return res.status(400).send("Invalid email or password");
     }
     const isPasswordCorrect = await brcypt.compare(password, user.password);
     if (!isPasswordCorrect) {
-      res.status(400).send("Invalid email or password");
+      return res.status(400).send("Invalid email or password");
     }
     generateToken(user._id, res);
     res.status(200).json({
@@ -60,7 +63,7 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in the controller, error: ", error);
-    res.status(500).send("Error in the controller, error: " + error);
+    res.status(500).send("Error in the controller: " + error.message);
   }
 };
 
