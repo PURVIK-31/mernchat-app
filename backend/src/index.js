@@ -1,6 +1,7 @@
 import express from "express";
 import cookieparser from "cookie-parser";
 import authRoutes from "./routes/auth.route.js";
+import cors from "cors";
 import messageRoutes from "./routes/message.route.js";
 import { connectDB } from "./lib/db.js";
 import dotenv from "dotenv";
@@ -9,6 +10,12 @@ const app = express();
 app.use(express.json());
 app.use(cookieparser());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 const PORT = process.env.PORT;
 
 app.use("/api/auth", authRoutes);
